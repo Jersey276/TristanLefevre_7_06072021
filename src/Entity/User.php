@@ -37,7 +37,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *          absolute = true
  *      ),
  *      exclusion = @Hateoas\Exclusion(
- *          groups="list"
+ *          groups={"list","detail"}
  *      )
  *  )
  */
