@@ -8,20 +8,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 
 class ProductController extends AbstractController
 {
     private SerializerInterface $serializer;
 
-    public function __construct()
+    public function __construct(SerializerInterface $serializer)
     {
-        $this->serializer = SerializerBuilder::create()->build();
+        $this->serializer = $serializer;
     }
 
     /**
-     * @Rest\Get("/products")
+     * @Rest\Get("/products", name="product_list")
      */
     public function listProducts(ProductRepository $productRepo): Response
     {
@@ -33,7 +32,7 @@ class ProductController extends AbstractController
     }
 
     /**
-     * @Rest\Get("/products/{id}")
+     * @Rest\Get("/products/{id}", name="product_detail")
      */
     public function productDetail(Product $product) : Response
     {
