@@ -47,7 +47,7 @@ class UserController extends AbstractController
      * @Rest\Get("/customer/{id}/users/{user_id}")
      * @Entity("user", expr="repository.find(user_id)")
      */
-    public function detailUser(Customer $customer, User $user): Response
+    public function detailUser(User $user): Response
     {
         $data = $this->serializer->serialize($user, 'json', SerializationContext::create()->setGroups(array('detail')));
         $response = new Response($data);
