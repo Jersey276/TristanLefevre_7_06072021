@@ -22,13 +22,13 @@ class UserController extends AbstractController
 
     private SerializerInterface $serializer;
 
-    public function __construct()
+    public function __construct(SerializerInterface $serializer)
     {
-        $this->serializer = SerializerBuilder::create()->build();
+        $this->serializer = $serializer;
     }
 
     /**
-     * @Rest\Get("/customer/{id}/users", name="user")
+     * @Rest\Get("/customer/{id}/users", name="user_list")
      */
     public function listUsers(Customer $customer): Response
     {
@@ -44,7 +44,7 @@ class UserController extends AbstractController
 
 
     /**
-     * @Rest\Get("/customer/{id}/users/{user_id}")
+     * @Rest\Get("/customer/{id}/users/{user_id}", name="user_detail")
      * @Entity("user", expr="repository.find(user_id)")
      */
     public function detailUser(User $user): Response
@@ -57,7 +57,7 @@ class UserController extends AbstractController
 
     
     /**
-     * @Rest\Post("/customer/{id}/users")
+     * @Rest\Post("/customer/{id}/users", name="user_add")
      * @Rest\View(StatusCode = 201)
      */
     public function addUser(Request $request, Customer $customer, FormFactoryInterface $factory): Response
@@ -81,10 +81,10 @@ class UserController extends AbstractController
 
     
     /**
-     * @Rest\Delete("/customer/{id}/users/{user_id}")
+     * @Rest\Delete("/customer/{id}/users/{user_id}", name="user_delete")
      * @Entity("user", expr="repository.find(user_id)")
      */
-    public function removeUser(User $user): Response
+    public function deleteUser(User $user): Response
     {
         $doctrine = $this->getDoctrine()->getManager();
         $doctrine->remove($user);
