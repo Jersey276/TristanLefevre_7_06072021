@@ -28,10 +28,12 @@ class UserController extends AbstractController
     }
 
     /**
-     * @Rest\Get("/customer/{id}/users", name="user_list")
+     * @Rest\Get("/users", name="user_list")
      */
-    public function listUsers(Customer $customer): Response
+    public function listUsers(): Response
     {
+        /** @var Customer $customer */
+        $customer = $this->getUser();
         $data = $this->serializer->serialize(
             $customer->getUsers(),
             'json',
@@ -44,8 +46,7 @@ class UserController extends AbstractController
 
 
     /**
-     * @Rest\Get("/customer/{id}/users/{user_id}", name="user_detail")
-     * @Entity("user", expr="repository.find(user_id)")
+     * @Rest\Get("/users/{id}", name="user_detail")
      */
     public function detailUser(User $user): Response
     {
@@ -57,11 +58,13 @@ class UserController extends AbstractController
 
     
     /**
-     * @Rest\Post("/customer/{id}/users", name="user_add")
+     * @Rest\Post("/users", name="user_add")
      * @Rest\View(StatusCode = 201)
      */
-    public function addUser(Request $request, Customer $customer, FormFactoryInterface $factory): Response
+    public function addUser(Request $request, FormFactoryInterface $factory): Response
     {
+        /** @var Customer $customer */
+        $customer = $this->getUser();
         $doctrine = $this->getDoctrine()->getManager();
         $data = $this->serializer->deserialize($request->getContent(),'array', 'json');
         $user = new User();
@@ -81,8 +84,7 @@ class UserController extends AbstractController
 
     
     /**
-     * @Rest\Delete("/customer/{id}/users/{user_id}", name="user_delete")
-     * @Entity("user", expr="repository.find(user_id)")
+     * @Rest\Delete("/users/{id}", name="user_delete")
      */
     public function deleteUser(User $user): Response
     {

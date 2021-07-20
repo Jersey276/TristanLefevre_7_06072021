@@ -7,6 +7,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
@@ -20,20 +22,23 @@ class ExceptionSubscriber implements EventSubscriberInterface
             ],
         ];
     }
-
+    
     public function processException(ExceptionEvent $event)
     {
         $exception = $event->getThrowable();
         if ($exception instanceof HttpExceptionInterface) {
             $result['code'] = $exception->getStatusCode();
-        } else {
+        } else if ($exception instanceof AccessDeniedException) {
+            $result['code'] = Response::HTTP_UNAUTHORIZED;
+        }
+            else {
             $result['code'] = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
         $result['body'] = [
             'code' => $result['code'],
             'message' => $exception->getMessage()
         ];
-        if ($result['code'] = Response::HTTP_INTERNAL_SERVER_ERROR) {
+        if ($result['code'] == Response::HTTP_INTERNAL_SERVER_ERROR) {
             $result['body']['stacktrace'] = $exception->getTrace();
         }
         $response = new JsonResponse($result['body'], $result['code']);
