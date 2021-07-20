@@ -17,8 +17,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *      href= @Hateoas\Route(
  *          "user_detail",
  *          parameters = { 
- *                  "id" = "expr(object.getCustomer().getId())",
- *                  "user_id" = "expr(object.getId())",
+ *                  "id" = "expr(object.getId())",
  *              },
  *          absolute = true
  *      ),
@@ -31,13 +30,12 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *      href= @Hateoas\Route(
  *          "user_delete",
  *          parameters = { 
- *                  "id" = "expr(object.getCustomer().getId())",
- *                  "user_id" = "expr(object.getId())",
+ *                  "id" = "expr(object.getId())",
  *              },
  *          absolute = true
  *      ),
  *      exclusion = @Hateoas\Exclusion(
- *          groups="list"
+ *          groups={"list","detail"}
  *      )
  *  )
  */
