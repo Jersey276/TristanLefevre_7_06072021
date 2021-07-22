@@ -23,7 +23,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class UserController extends AbstractController
 {
-
     private SerializerInterface $serializer;
 
     public function __construct(SerializerInterface $serializer)
@@ -116,7 +115,7 @@ class UserController extends AbstractController
         /** @var Customer $customer */
         $customer = $this->getUser();
         $doctrine = $this->getDoctrine()->getManager();
-        $data = $this->serializer->deserialize($request->getContent(),'array', 'json');
+        $data = $this->serializer->deserialize($request->getContent(), 'array', 'json');
         $user = new User();
         $form = $factory->create(UserType::class, $user, ['csrf_protection' => false]);
         $form->submit($data);
@@ -128,7 +127,7 @@ class UserController extends AbstractController
             $result = $this->serializer->serialize($data, 'json');
             return new Response($result, Response::HTTP_CREATED);
         }
-        $result = $this->serializer->serialize((string) $form->getErrors(true,false), 'json');
+        $result = $this->serializer->serialize((string) $form->getErrors(true, false), 'json');
         return new Response($result, Response::HTTP_BAD_REQUEST);
     }
 
@@ -144,8 +143,8 @@ class UserController extends AbstractController
      */
     public function deleteUser(User $user): Response
     {
-    /** @var Customer $customer */
-    $customer = $this->getUser();
+        /** @var Customer $customer */
+        $customer = $this->getUser();
         if ($user->getCustomer()->getId() == $customer->getId()) {
             $doctrine = $this->getDoctrine()->getManager();
             $doctrine->remove($user);

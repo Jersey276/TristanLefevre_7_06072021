@@ -53,7 +53,7 @@ class ProductController extends AbstractController
      */
     public function productDetail(Product $product) : Response
     {
-        $data = $this->serializer->serialize($product, 'json',SerializationContext::create()->setGroups(array('detail')));
+        $data = $this->serializer->serialize($product, 'json', SerializationContext::create()->setGroups(array('detail')));
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');
         return $response;

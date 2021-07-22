@@ -23,8 +23,8 @@ class AppFixtures extends Fixture
 
     // mdp1 : test1, mdp2 : test2
     private array $customers = [
-        ['Danube Marketplace','bileMoCust1','$2y$13$RursWsNq15X54IoUfgAOuusAQ3H89BXAad/dAiG5YwB37T0Dr5r2O', ['ROLE_USER']],
-        ['Green telecom','bileMoCust2','$2y$13$YMA1FOOMCNym09LuanskZuOzuzVu/2DbvBPrjxFxlMTaYWbyLX62a', ['ROLE_USER']]
+        ['Danube Marketplace','bileMoCust1','$2y$13$vfAtb.xjQssJtdftiuj6BuIJ5P4DXHhRYx2HR8erOIsdEkuv6Qb4S', ['ROLE_USER']],
+        ['Green telecom','bileMoCust2','$2y$13$EyoiU8a7TM0DkLEhpQbr4u27HvRxmlqQEnhPcBGLGWHtk4F0YGL5m', ['ROLE_USER']]
     ];
 
     public function load(ObjectManager $manager)
@@ -51,7 +51,7 @@ class AppFixtures extends Fixture
         }
 
         $manager->flush();
-
+        // Customer
         foreach ($this->customers as $customer) {
             list($name, $username, $password, $role) = $customer;
             $newCustomer = new Customer();
