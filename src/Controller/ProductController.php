@@ -12,6 +12,7 @@ use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\Annotation as Serializer;
 
 class ProductController extends AbstractController
 {
@@ -29,6 +30,7 @@ class ProductController extends AbstractController
      *     description="Return list of all products",
      *     @Model(type=Product::class, groups={"list"})
      * )
+     * @Serializer\Since("1.0")
      * @OA\Tag(name="products")
      * @Security(name="Bearer")
      */
@@ -48,6 +50,7 @@ class ProductController extends AbstractController
      *     description="Return detail for a product",
      *     @Model(type=Product::class, groups={"detail"})
      * )
+     * @Serializer\Since("1.0")
      * @OA\Tag(name="products")
      * @Security(name="Bearer")
      */

@@ -7,19 +7,18 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\UserType;
-use Doctrine\DBAL\ForwardCompatibility\Result;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use JMS\Serializer\Annotation as Serializer;
+
 
 class UserController extends AbstractController
 {
@@ -39,6 +38,7 @@ class UserController extends AbstractController
      * )
      * @OA\Tag(name="user")
      * @Security(name="Bearer")
+     * @Serializer\Since("1.0")
      */
     public function listUsers(): Response
     {
@@ -64,13 +64,18 @@ class UserController extends AbstractController
      * )
      * @OA\Tag(name="user")
      * @Security(name="Bearer")
+     * @Serializer\Since("1.0")
      */
     public function detailUser(User $user): Response
     {
         /** @var Customer $customer */
         $customer = $this->getUser();
         if ($customer->getId() == $user->getId()) {
-            $data = $this->serializer->serialize($user, 'json', SerializationContext::create()->setGroups(array('detail')));
+            $data = $this->serializer->serialize(
+                $user,
+                'json',
+                SerializationContext::create()->setGroups(array('detail'))
+            );
             $response = new Response($data);
             $response->headers->set('Content-Type', 'application/json');
             return $response;
@@ -109,13 +114,18 @@ class UserController extends AbstractController
      * )
      * @OA\Tag(name="user")
      * @Security(name="Bearer")
+     * @Serializer\Since("1.0")
      */
     public function addUser(Request $request, FormFactoryInterface $factory): Response
     {
         /** @var Customer $customer */
         $customer = $this->getUser();
         $doctrine = $this->getDoctrine()->getManager();
-        $data = $this->serializer->deserialize($request->getContent(), 'array', 'json');
+        $data = $this->serializer->deserialize(
+            $request->getContent(),
+            'array',
+            'json'
+        );
         $user = new User();
         $form = $factory->create(UserType::class, $user, ['csrf_protection' => false]);
         $form->submit($data);
@@ -127,7 +137,10 @@ class UserController extends AbstractController
             $result = $this->serializer->serialize($data, 'json');
             return new Response($result, Response::HTTP_CREATED);
         }
-        $result = $this->serializer->serialize((string) $form->getErrors(true, false), 'json');
+        $result = $this->serializer->serialize(
+            (string) $form->getErrors(true, false),
+            'json'
+        );
         return new Response($result, Response::HTTP_BAD_REQUEST);
     }
 
@@ -140,6 +153,7 @@ class UserController extends AbstractController
      * )
      * @OA\Tag(name="user")
      * @Security(name="Bearer")
+     * @Serializer\Since("1.0")
      */
     public function deleteUser(User $user): Response
     {
