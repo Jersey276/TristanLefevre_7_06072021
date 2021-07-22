@@ -43,7 +43,7 @@ class ProductController extends AbstractController
 
     /**
      * @Rest\Get("/products/{id}", name="product_detail")
-     *      * @OA\Response(
+     * @OA\Response(
      *     response=200,
      *     description="Return detail for a product",
      *     @Model(type=Product::class, groups={"detail"})

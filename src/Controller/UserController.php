@@ -88,17 +88,25 @@ class UserController extends AbstractController
      *     description="Create a new user on customer concerned by jwt token",
      *     @Model(type=User::class, groups={"list"})
      * )
-     * @OA\Parameter(
-     *     name="name",
-     *     in="query",
-     *     description="The name of new user",
-     *     @OA\Schema(type="string")
-     * )
-     * @OA\Parameter(
-     *     name="address",
-     *     in="query",
-     *     description="The address of new user",
-     *     @OA\Schema(type="string")
+     *     @OA\RequestBody(
+     *         description="Input data format",
+     *         @OA\MediaType(
+     *             mediaType="application/json",
+     *             @OA\Schema(
+     *                 type="object",
+     *                 @OA\Property(
+     *                     property="name",
+     *                     description="The name of new user",
+     *                     type="string",
+     *                 ),
+     *                 @OA\Property(
+     *                     property="address",
+     *                     description="The address of new user",
+     *                     type="string"
+     *                 )
+     *             )
+     *         )
+     *     )
      * )
      * @OA\Tag(name="user")
      * @Security(name="Bearer")

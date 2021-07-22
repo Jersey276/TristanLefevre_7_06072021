@@ -1,7 +1,7 @@
 nelmio_api_doc:
     areas:
         default:
-            path_patterns: [ ^/api/products, ^/api/users ]
+            path_patterns: [ ^/api/products, ^/api/users, ^/login ]
     documentation:
         info:
             title: MileBo Api
@@ -13,5 +13,27 @@ nelmio_api_doc:
                     type: http
                     scheme: bearer
                     bearerFormat: JWT
-        security:
-            - Bearer: []
+        paths:
+            /login:
+                post:
+                    requestBody:
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        username:
+                                            type: string
+                                        password:
+                                            type: string
+                    responses:
+                        200 :
+                            description: A JWT token will be send to user
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+
