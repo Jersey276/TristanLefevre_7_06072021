@@ -12,7 +12,7 @@ use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
-    public static function getSubscribedEvents() : Array
+    public static function getSubscribedEvents() : array
     {
         // return the subscribed events, their methods and priorities
         return [
@@ -28,10 +28,9 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $exception = $event->getThrowable();
         if ($exception instanceof HttpExceptionInterface) {
             $result['code'] = $exception->getStatusCode();
-        } else if ($exception instanceof AccessDeniedException) {
+        } elseif ($exception instanceof AccessDeniedException) {
             $result['code'] = Response::HTTP_UNAUTHORIZED;
-        }
-            else {
+        } else {
             $result['code'] = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
         $result['body'] = [
