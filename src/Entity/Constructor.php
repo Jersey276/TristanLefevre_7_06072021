@@ -18,13 +18,13 @@ class Constructor
      * @ORM\Column(type="integer")
      * @Groups({"detail"})
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=32)
      * @Groups({"detail"})
      */
-    private $name;
+    private string $name;
 
     public function getId(): ?int
     {

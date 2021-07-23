@@ -27,7 +27,7 @@ class AppFixtures extends Fixture
         ['Green telecom','bileMoCust2','$2y$13$EyoiU8a7TM0DkLEhpQbr4u27HvRxmlqQEnhPcBGLGWHtk4F0YGL5m', ['ROLE_USER']]
     ];
 
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager) : void
     {
         // constructors
         foreach ($this->constructors as $constructor) {
@@ -40,14 +40,15 @@ class AppFixtures extends Fixture
         foreach ($this->models as $model) {
             list($constructor, $name, $description, $price) = $model;
             $newProduct = new Product();
-            $newProduct
+            $construct = $manager->find(Constructor::class, $constructor);
+            if (isset($construct)) {
+                $newProduct
             ->setName($name)
             ->setPrice($price)
             ->setDescription($description)
-            ->setConstructor(
-                $manager->find(Constructor::class, $constructor)
-            );
-            $manager->persist($newProduct);
+            ->setConstructor($construct);
+                $manager->persist($newProduct);
+            }
         }
 
         $manager->flush();

@@ -13,12 +13,13 @@ use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\UserType;
+use App\Security\Voter\CustomerVoter;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use JMS\Serializer\Annotation as Serializer;
-
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class UserController extends AbstractController
 {
@@ -68,19 +69,16 @@ class UserController extends AbstractController
      */
     public function detailUser(User $user): Response
     {
-        /** @var Customer $customer */
-        $customer = $this->getUser();
-        if ($customer->getId() == $user->getId()) {
-            $data = $this->serializer->serialize(
-                $user,
-                'json',
-                SerializationContext::create()->setGroups(array('detail'))
-            );
-            $response = new Response($data);
-            $response->headers->set('Content-Type', 'application/json');
-            return $response;
-        }
-        throw new NotFoundHttpException();
+        $this->denyAccessUnlessGranted(CustomerVoter::CUST_ACCESS, $user, 'customer not related to user');
+
+        $data = $this->serializer->serialize(
+            $user,
+            'json',
+            SerializationContext::create()->setGroups(array('detail'))
+        );
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     
@@ -121,6 +119,7 @@ class UserController extends AbstractController
         /** @var Customer $customer */
         $customer = $this->getUser();
         $doctrine = $this->getDoctrine()->getManager();
+        /** @var array $data */
         $data = $this->serializer->deserialize(
             $request->getContent(),
             'array',
@@ -157,14 +156,10 @@ class UserController extends AbstractController
      */
     public function deleteUser(User $user): Response
     {
-        /** @var Customer $customer */
-        $customer = $this->getUser();
-        if ($user->getCustomer()->getId() == $customer->getId()) {
-            $doctrine = $this->getDoctrine()->getManager();
-            $doctrine->remove($user);
-            $doctrine->flush();
-            return new Response(null, Response::HTTP_OK);
-        }
-        throw new AccessDeniedException("user not related with your website ");
+        $this->denyAccessUnlessGranted(CustomerVoter::CUST_ACCESS, $user, 'customer not related to user');
+        $doctrine = $this->getDoctrine()->getManager();
+        $doctrine->remove($user);
+        $doctrine->flush();
+        return new Response(null, Response::HTTP_OK);
     }
 }

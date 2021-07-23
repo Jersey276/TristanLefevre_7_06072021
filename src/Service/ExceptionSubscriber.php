@@ -23,7 +23,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         ];
     }
     
-    public function processException(ExceptionEvent $event)
+    public function processException(ExceptionEvent $event) : void
     {
         $exception = $event->getThrowable();
         if ($exception instanceof HttpExceptionInterface) {
@@ -44,7 +44,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
         $event->setResponse($response);
     }
 
-    public function logException(ExceptionEvent $event)
+    public function logException(ExceptionEvent $event) : void
     {
         $exception = $event->getThrowable();
         if (! $exception instanceof HttpExceptionInterface) {
