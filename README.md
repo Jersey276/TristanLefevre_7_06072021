@@ -5,22 +5,21 @@ A api for a mobile business
 
 ## Installation
 
-1. get package
-2. Collect all composer dependencies with `composer require` or `composer update` and press enter
-3. Update .env with your database information (domain name of server, db name, login, password). See .env for more detail.
-4. Use 'php bin/console doctrine/migrations/migrate' for fill database with all table
-5. (optionnal) for testing database, use commande 'php bin/console doctrine:fixtures:load'
-
+1.  get package
+2.  Collect all composer dependencies with `composer require` or `composer update` and press enter
+3.  Update .env with your database information (domain name of server, db name, login, password). See .env for more detail.
+4.  Use 'php bin/console doctrine/migrations/migrate' for fill database with all table
+5.  (optionnal) for testing database, use commande 'php bin/console doctrine:fixtures:load'
 
 ## Content
 
 This Api offer some services and functions such as :
 
-- Authentification system and JWT Token
-- Product listing and datail
-- customer's user manager
-- Documentation with sandbox
-- Error manager
+-   Authentification system and JWT Token
+-   Product listing and datail
+-   customer's user manager
+-   Documentation with sandbox
+-   Error manager
 
 More detail and all list of api command on documentation at link :
 
