@@ -144,7 +144,11 @@ class UserController extends AbstractController
             $user->setCustomer($customer);
             $doctrine->persist($user);
             $doctrine->flush();
-            $result = $this->serializer->serialize($data, 'json');
+            $result = $this->serializer->serialize(
+                $user,
+                'json',
+                SerializationContext::create()->setGroups(array('detail'))
+            );
             return new Response($result, Response::HTTP_CREATED);
         }
         $result = $this->serializer->serialize(
