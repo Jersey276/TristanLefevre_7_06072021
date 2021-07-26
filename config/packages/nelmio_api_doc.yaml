@@ -1,0 +1,46 @@
+nelmio_api_doc:
+    models:
+        names:
+            - { alias: List User, type: App\Entity\User, groups: [list]}
+            - { alias: Detail User, type: App\Entity\User, groups: [detail]}
+            - { alias: List Product, type: App\Entity\Product, groups: [list]}
+            - { alias: Detail Product, type: App\Entity\Product, groups: [detail]}
+    areas:
+        default:
+            path_patterns: [ ^/api/products, ^/api/users, ^/login ]
+    documentation:
+        info:
+            title: MileBo Api
+            description: An api for all customer of MileBo service
+            version: 1.0.0
+        components:
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+        paths:
+            /login:
+                post:
+                    summary: Ask for a JWT token
+                    requestBody:
+                        content:
+                            application/json:
+                                schema:
+                                    type: object
+                                    properties:
+                                        username:
+                                            type: string
+                                        password:
+                                            type: string
+                    responses:
+                        200 :
+                            description: A JWT token will be send to user
+                            content:
+                                application/json:
+                                    schema:
+                                        type: object
+                                        properties:
+                                            token:
+                                                type: string
+
