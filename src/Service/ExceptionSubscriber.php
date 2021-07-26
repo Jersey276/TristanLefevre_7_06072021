@@ -58,7 +58,7 @@ class ExceptionSubscriber implements EventSubscriberInterface
 
     /**
      * Log exception when thrown
-     * @param ExceptionEvent $evene
+     * @param ExceptionEvent $event
      */
     public function logException(ExceptionEvent $event) : void
     {
