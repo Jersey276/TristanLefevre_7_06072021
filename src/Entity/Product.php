@@ -29,33 +29,33 @@ class Product
      * @ORM\Column(type="integer")
      * @Groups({"list","detail"})
      */
-    private $id;
+    private int $id;
 
     /**
      * @ORM\Column(type="string", length=32)
      * @Groups({"list","detail"})
 
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="text")
      * @Groups({"detail"})
      */
-    private $description;
+    private string $description;
 
     /**
      * @ORM\Column(type="float")
      * @Groups({"list","detail"})
      */
-    private $price;
+    private float $price;
 
     /**
      * @ORM\ManyToOne(targetEntity=Constructor::class)
      * @ORM\JoinColumn(nullable=false)
      * @Groups({"detail"})
      */
-    private $constructor;
+    private Constructor $constructor;
 
     public function getId(): ?int
     {
@@ -98,12 +98,12 @@ class Product
         return $this;
     }
 
-    public function getConstructor(): ?Constructor
+    public function getConstructor(): Constructor
     {
         return $this->constructor;
     }
 
-    public function setConstructor(?Constructor $constructor): self
+    public function setConstructor(Constructor $constructor): self
     {
         $this->constructor = $constructor;
 

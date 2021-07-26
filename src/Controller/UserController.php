@@ -7,20 +7,22 @@ use App\Entity\User;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Entity;
-use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use Symfony\Component\HttpFoundation\Request;
 use App\Form\UserType;
-use Doctrine\DBAL\ForwardCompatibility\Result;
+use App\Security\Voter\CustomerVoter;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use JMS\Serializer\Annotation as Serializer;
 
+/**
+ * Controller for all element about User entity
+ * @author Tristan
+ * @version 1
+ */
 class UserController extends AbstractController
 {
     private SerializerInterface $serializer;
@@ -31,6 +33,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * List all user customer (related to authentified customer)
+     * @return Response JsonResponse
      * @Rest\Get("/users", name="user_list")
      * @OA\Response(
      *     response=200,
@@ -39,6 +43,7 @@ class UserController extends AbstractController
      * )
      * @OA\Tag(name="user")
      * @Security(name="Bearer")
+     * @Serializer\Since("1.0")
      */
     public function listUsers(): Response
     {
@@ -56,6 +61,9 @@ class UserController extends AbstractController
 
 
     /**
+     * Display detail about user (related to authentified customer)
+     * @param User $user
+     * @return Response Json Response
      * @Rest\Get("/users/{id}", name="user_detail")
      * @OA\Response(
      *     response=200,
@@ -64,22 +72,28 @@ class UserController extends AbstractController
      * )
      * @OA\Tag(name="user")
      * @Security(name="Bearer")
+     * @Serializer\Since("1.0")
      */
     public function detailUser(User $user): Response
     {
-        /** @var Customer $customer */
-        $customer = $this->getUser();
-        if ($customer->getId() == $user->getId()) {
-            $data = $this->serializer->serialize($user, 'json', SerializationContext::create()->setGroups(array('detail')));
-            $response = new Response($data);
-            $response->headers->set('Content-Type', 'application/json');
-            return $response;
-        }
-        throw new NotFoundHttpException();
+        $this->denyAccessUnlessGranted(CustomerVoter::CUST_ACCESS, $user, 'customer not related to user');
+
+        $data = $this->serializer->serialize(
+            $user,
+            'json',
+            SerializationContext::create()->setGroups(array('detail'))
+        );
+        $response = new Response($data);
+        $response->headers->set('Content-Type', 'application/json');
+        return $response;
     }
 
     
     /**
+     * Create a new user (related to authentified customer)
+     * @param Request $request
+     * @param  FormFactoryInterface $factory
+     * @return Response Json Response
      * @Rest\Post("/users", name="user_add")
      * @Rest\View(StatusCode = 201)
      * @OA\Response(
@@ -109,13 +123,19 @@ class UserController extends AbstractController
      * )
      * @OA\Tag(name="user")
      * @Security(name="Bearer")
+     * @Serializer\Since("1.0")
      */
     public function addUser(Request $request, FormFactoryInterface $factory): Response
     {
         /** @var Customer $customer */
         $customer = $this->getUser();
         $doctrine = $this->getDoctrine()->getManager();
-        $data = $this->serializer->deserialize($request->getContent(), 'array', 'json');
+        /** @var array $data */
+        $data = $this->serializer->deserialize(
+            $request->getContent(),
+            'array',
+            'json'
+        );
         $user = new User();
         $form = $factory->create(UserType::class, $user, ['csrf_protection' => false]);
         $form->submit($data);
@@ -127,12 +147,18 @@ class UserController extends AbstractController
             $result = $this->serializer->serialize($data, 'json');
             return new Response($result, Response::HTTP_CREATED);
         }
-        $result = $this->serializer->serialize((string) $form->getErrors(true, false), 'json');
+        $result = $this->serializer->serialize(
+            (string) $form->getErrors(true, false),
+            'json'
+        );
         return new Response($result, Response::HTTP_BAD_REQUEST);
     }
 
     
     /**
+     * delete one of user (related to authentified customer)
+     * @param User $user concerned user
+     * @return Response Json response
      * @Rest\Delete("/users/{id}", name="user_delete")
      * @OA\Response(
      *     response=200,
@@ -140,17 +166,14 @@ class UserController extends AbstractController
      * )
      * @OA\Tag(name="user")
      * @Security(name="Bearer")
+     * @Serializer\Since("1.0")
      */
     public function deleteUser(User $user): Response
     {
-        /** @var Customer $customer */
-        $customer = $this->getUser();
-        if ($user->getCustomer()->getId() == $customer->getId()) {
-            $doctrine = $this->getDoctrine()->getManager();
-            $doctrine->remove($user);
-            $doctrine->flush();
-            return new Response(null, Response::HTTP_OK);
-        }
-        throw new AccessDeniedException("user not related with your website ");
+        $this->denyAccessUnlessGranted(CustomerVoter::CUST_ACCESS, $user, 'customer not related to user');
+        $doctrine = $this->getDoctrine()->getManager();
+        $doctrine->remove($user);
+        $doctrine->flush();
+        return new Response(null, Response::HTTP_OK);
     }
 }

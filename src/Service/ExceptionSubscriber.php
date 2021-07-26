@@ -7,11 +7,18 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
+/**
+ * Event subscriber manage exception in this api
+ * @author Tristan
+ * @version 1
+ */
 class ExceptionSubscriber implements EventSubscriberInterface
 {
+    /**
+     * Get subscribed Events with respectedpriority
+     */
     public static function getSubscribedEvents() : array
     {
         // return the subscribed events, their methods and priorities
@@ -23,7 +30,11 @@ class ExceptionSubscriber implements EventSubscriberInterface
         ];
     }
     
-    public function processException(ExceptionEvent $event)
+    /**
+     * Send Error like Response
+     * @param ExceptionEvent $event
+     */
+    public function processException(ExceptionEvent $event) : void
     {
         $exception = $event->getThrowable();
         if ($exception instanceof HttpExceptionInterface) {
@@ -37,14 +48,19 @@ class ExceptionSubscriber implements EventSubscriberInterface
             'code' => $result['code'],
             'message' => $exception->getMessage()
         ];
-        if ($result['code'] == Response::HTTP_INTERNAL_SERVER_ERROR) {
-            $result['body']['stacktrace'] = $exception->getTrace();
-        }
+    // Code use for developpment only
+    //    if ($result['code'] == Response::HTTP_INTERNAL_SERVER_ERROR) {
+    //        $result['body']['stacktrace'] = $exception->getTrace();
+    //    }
         $response = new JsonResponse($result['body'], $result['code']);
         $event->setResponse($response);
     }
 
-    public function logException(ExceptionEvent $event)
+    /**
+     * Log exception when thrown
+     * @param ExceptionEvent $event
+     */
+    public function logException(ExceptionEvent $event) : void
     {
         $exception = $event->getThrowable();
         if (! $exception instanceof HttpExceptionInterface) {

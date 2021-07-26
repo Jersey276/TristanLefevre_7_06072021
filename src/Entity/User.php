@@ -63,7 +63,7 @@ class User
      * message="name cannot be null"
      * )
      */
-    private $name;
+    private string $name;
 
     /**
      * @ORM\Column(type="string", length=255)
@@ -72,7 +72,7 @@ class User
      * message="address cannot be null"
      * )
      */
-    private $address;
+    private string $address;
 
     public function getId(): ?int
     {
@@ -84,7 +84,7 @@ class User
         return $this->customer;
     }
 
-    public function setCustomer(?Customer $customer): self
+    public function setCustomer(Customer $customer): self
     {
         $this->customer = $customer;
 

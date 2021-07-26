@@ -12,7 +12,13 @@ use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
+use JMS\Serializer\Annotation as Serializer;
 
+/**
+ * Controller for all element for display Product entity
+ * @author Tristan
+ * @version 1
+ */
 class ProductController extends AbstractController
 {
     private SerializerInterface $serializer;
@@ -23,12 +29,16 @@ class ProductController extends AbstractController
     }
 
     /**
+     * List all products
+     * @param ProductRepository $productRepo
+     * @return Response Json response
      * @Rest\Get("/products", name="product_list")
      * @OA\Response(
      *     response=200,
      *     description="Return list of all products",
      *     @Model(type=Product::class, groups={"list"})
      * )
+     * @Serializer\Since("1.0")
      * @OA\Tag(name="products")
      * @Security(name="Bearer")
      */
@@ -42,12 +52,16 @@ class ProductController extends AbstractController
     }
 
     /**
+     * Display detail about product
+     * @param Product $product
+     * @return Response Json response
      * @Rest\Get("/products/{id}", name="product_detail")
      * @OA\Response(
      *     response=200,
      *     description="Return detail for a product",
      *     @Model(type=Product::class, groups={"detail"})
      * )
+     * @Serializer\Since("1.0")
      * @OA\Tag(name="products")
      * @Security(name="Bearer")
      */

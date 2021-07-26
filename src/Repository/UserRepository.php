@@ -19,17 +19,6 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
-    public function findAddListSimple(int $id) : Array
-    {
-        $qb = $this->createQueryBuilder('u')
-            ->select('u.id, u.name')
-            ->leftJoin('u.customer','c')
-            ->where('c.id = :cu_id')
-            ->setParameter('cu_id',$id);
-            return $qb->getQuery()
-            ->getResult();
-    }
-
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

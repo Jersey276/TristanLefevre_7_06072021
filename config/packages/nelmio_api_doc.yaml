@@ -1,4 +1,10 @@
 nelmio_api_doc:
+    models:
+        names:
+            - { alias: List User, type: App\Entity\User, groups: [list]}
+            - { alias: Detail User, type: App\Entity\User, groups: [detail]}
+            - { alias: List Product, type: App\Entity\Product, groups: [list]}
+            - { alias: Detail Product, type: App\Entity\Product, groups: [detail]}
     areas:
         default:
             path_patterns: [ ^/api/products, ^/api/users, ^/login ]
@@ -16,6 +22,7 @@ nelmio_api_doc:
         paths:
             /login:
                 post:
+                    summary: Ask for a JWT token
                     requestBody:
                         content:
                             application/json:
