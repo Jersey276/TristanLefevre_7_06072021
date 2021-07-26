@@ -16,11 +16,13 @@ use App\Form\UserType;
 use App\Security\Voter\CustomerVoter;
 use JMS\Serializer\SerializationContext;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\Component\HttpFoundation\File\Exception\AccessDeniedException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use JMS\Serializer\Annotation as Serializer;
-use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
+/**
+ * Controller for all element about User entity
+ * @author Tristan
+ * @version 1
+ */
 class UserController extends AbstractController
 {
     private SerializerInterface $serializer;
@@ -31,6 +33,8 @@ class UserController extends AbstractController
     }
 
     /**
+     * List all user customer (related to authentified customer)
+     * @return Response JsonResponse
      * @Rest\Get("/users", name="user_list")
      * @OA\Response(
      *     response=200,
@@ -57,6 +61,9 @@ class UserController extends AbstractController
 
 
     /**
+     * Display detail about user (related to authentified customer)
+     * @param User $user
+     * @return Response Json Response
      * @Rest\Get("/users/{id}", name="user_detail")
      * @OA\Response(
      *     response=200,
@@ -83,6 +90,10 @@ class UserController extends AbstractController
 
     
     /**
+     * Create a new user (related to authentified customer)
+     * @param Request $request
+     * @param  FormFactoryInterface $factory
+     * @return Response Json Response
      * @Rest\Post("/users", name="user_add")
      * @Rest\View(StatusCode = 201)
      * @OA\Response(
@@ -145,6 +156,9 @@ class UserController extends AbstractController
 
     
     /**
+     * delete one of user (related to authentified customer)
+     * @param User $user concerned user
+     * @return Response Json response
      * @Rest\Delete("/users/{id}", name="user_delete")
      * @OA\Response(
      *     response=200,

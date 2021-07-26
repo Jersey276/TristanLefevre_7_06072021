@@ -8,6 +8,11 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+/**
+ * Class for check right of an user for a customer
+ * @author Tristan
+ * @version 1
+ */
 class CustomerVoter extends Voter
 {
     const CUST_ACCESS = 'CUST_ACCESS';
@@ -33,7 +38,6 @@ class CustomerVoter extends Voter
             return false;
         }
 
-        // ... (check conditions and return true to grant permission) ...
         switch ($attribute) {
             case 'CUST_ACCESS':
                 return $this->canAccess($customer, $subject);
@@ -42,6 +46,12 @@ class CustomerVoter extends Voter
         return false;
     }
 
+    /**
+     * Check if connected customer own this user
+     * @param Customer $customer logged Customer
+     * @param User $user concerned user
+     * @return bool response
+     */
     private function canAccess(Customer $customer, User $user) : bool
     {
         return $customer === $user->getCustomer();
