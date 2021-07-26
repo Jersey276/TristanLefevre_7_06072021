@@ -7,9 +7,10 @@ A api for a mobile business
 
 1.  get package
 2.  Collect all composer dependencies with `composer require` or `composer update` and press enter
-3.  Update .env with your database information (domain name of server, db name, login, password). See .env for more detail.
+3.  Update .env with your database information (domain name of server, db name, login, password). See .env for more detail.  
 4.  Use 'php bin/console doctrine/migrations/migrate' for fill database with all table
 5.  (optionnal) for testing database, use commande 'php bin/console doctrine:fixtures:load'
+6.  Use `php bin/console lexik:jwt:generate-keypair` for generate private/public key
 
 ## Content
 
